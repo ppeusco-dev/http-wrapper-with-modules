@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "http/wrapper"
+require 'oj'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -13,3 +14,5 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require f }
