@@ -3,18 +3,27 @@
 module Http
   module Wrapper
     module HttpStatusCodes
-      HTTP_OK_CODE = 200
-      HTTP_CREATED_CODE = 201
-      HTTP_BAD_REQUEST_CODE = 400
-      HTTP_UNAUTHORIZED_CODE = 401
-      HTTP_FORBIDDEN_CODE = 403
-      HTTP_NOT_FOUND_CODE = 404
-      HTTP_UNPROCESSABLE_ENTITY_CODE = 422
-      HTTP_TOO_MANY_REQUEST = 429
-      HTTP_INTERNAL_SERVER_ERROR_CODE = 500
-      HTTP_BAD_GATEWAY_CODE = 502
-      HTTP_SERVICE_UNAVAILABLE_CODE = 503
-      HTTP_GATEWAY_TIMEOUT_CODE = 504
+      OK = :ok
+      CREATED = :created
+      ACCEPTED = :accepted
+      NO_CONTENT = :no_content
+      MOVED_PERMANENTLY = :moved_permanently
+      FOUND = :found
+      NOT_MODIFIED = :not_modified
+      TEMPORARY_REDIRECT = :temporary_redirect
+      PERMANENT_REDIRECT = :permanent_redirect
+      BAD_REQUEST = :bad_request
+      UNAUTHORIZED = :unauthorized
+      FORBIDDEN = :forbidden
+      NOT_FOUND = :not_found
+      METHOD_NOT_ALLOWED = :method_not_allowed
+      CONFLICT = :conflict
+      UNPROCESSABLE_ENTITY = :unprocessable_entity
+      TOO_MANY_REQUESTS = :too_many_requests
+      INTERNAL_SERVER_ERROR = :internal_server_error
+      BAD_GATEWAY = :bad_gateway
+      SERVICE_UNAVAILABLE = :service_unavailable
+      GATEWAY_TIMEOUT = :gateway_timeout
     end
   end
 end

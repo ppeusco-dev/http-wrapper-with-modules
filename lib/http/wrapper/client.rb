@@ -7,14 +7,14 @@ module Http
       include ::Http::Wrapper::HttpStatusCodes
 
       SUCCESSFUL_STATUS = [
-        HTTP_OK_CODE, HTTP_CREATED_CODE
+        OK, CREATED
       ].freeze
 
       UNSUCCESSFUL_STATUS = [
-        HTTP_BAD_REQUEST_CODE, HTTP_UNAUTHORIZED_CODE, HTTP_FORBIDDEN_CODE,
-        HTTP_NOT_FOUND_CODE, HTTP_UNPROCESSABLE_ENTITY_CODE, HTTP_TOO_MANY_REQUEST,
-        HTTP_INTERNAL_SERVER_ERROR_CODE, HTTP_BAD_GATEWAY_CODE, HTTP_SERVICE_UNAVAILABLE_CODE,
-        HTTP_GATEWAY_TIMEOUT_CODE
+        BAD_REQUEST, UNAUTHORIZED, FORBIDDEN,
+        NOT_FOUND, UNPROCESSABLE_ENTITY, TOO_MANY_REQUESTS,
+        INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE,
+        GATEWAY_TIMEOUT
       ].freeze
 
       def connection(api_endpoint, headers)
@@ -37,11 +37,11 @@ module Http
       # TODO: To refactor this methods is necessary map the error codes with the error classes
       def error_class
         case @response.status
-        when HTTP_BAD_REQUEST_CODE then ApiExceptions.const_get("BadRequestError").new
-        when HTTP_UNAUTHORIZED_CODE then ApiExceptions.const_get("UnauthorizedError").new
-        when HTTP_FORBIDDEN_CODE then forbidden_error(response)
-        when HTTP_NOT_FOUND_CODE then ApiExceptions.const_get("NotFoundError").new
-        when HTTP_UNPROCESSABLE_ENTITY_CODE then ApiExceptions.const_get("UnprocessableEntityError").new
+        when BAD_REQUEST then ApiExceptions.const_get("BadRequestError").new
+        when UNAUTHORIZED then ApiExceptions.const_get("UnauthorizedError").new
+        when FORBIDDEN then forbidden_error(response)
+        when NOT_FOUND then ApiExceptions.const_get("NotFoundError").new
+        when UNPROCESSABLE_ENTITY then ApiExceptions.const_get("UnprocessableEntityError").new
         else
           ApiError.new
         end

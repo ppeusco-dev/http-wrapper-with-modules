@@ -61,16 +61,16 @@ RSpec.describe Http::Wrapper::Client do
 
   describe '.request' do
     context 'when the response is successful' do
-      include_examples 'a successful response', Http::Wrapper::HttpStatusCodes::HTTP_OK_CODE
-      include_examples 'a successful response', Http::Wrapper::HttpStatusCodes::HTTP_CREATED_CODE
+      include_examples 'a successful response', Http::Wrapper::HttpStatusCodes::OK
+      include_examples 'a successful response', Http::Wrapper::HttpStatusCodes::CREATED
     end
 
     context 'when the response is unsuccessful' do
       context 'when the response is a bad request' do
-        let(:status) { Http::Wrapper::HttpStatusCodes::HTTP_BAD_REQUEST_CODE }
+        let(:status) { Http::Wrapper::HttpStatusCodes::BAD_REQUEST }
         let(:error_class) { Http::Wrapper::ApiExceptions::BadRequestError }
 
-        include_examples 'an unsuccessful response', Http::Wrapper::HttpStatusCodes::HTTP_BAD_REQUEST_CODE,
+        include_examples 'an unsuccessful response', Http::Wrapper::HttpStatusCodes::BAD_REQUEST,
                          Http::Wrapper::ApiExceptions::BadRequestError
       end
 
@@ -78,7 +78,7 @@ RSpec.describe Http::Wrapper::Client do
         let(:status) { 999 }
         let(:error_class) { Http::Wrapper::ApiExceptions::ApiError }
 
-        include_examples 'an unsuccessful response', Http::Wrapper::HttpStatusCodes::HTTP_BAD_REQUEST_CODE,
+        include_examples 'an unsuccessful response', Http::Wrapper::HttpStatusCodes::BAD_REQUEST,
                          Http::Wrapper::ApiExceptions::ApiError
       end
     end
