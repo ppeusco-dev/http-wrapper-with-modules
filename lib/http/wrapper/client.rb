@@ -37,11 +37,11 @@ module Http
       # TODO: To refactor this methods is necessary map the error codes with the error classes
       def error_class
         case @response.status
-        when HTTP_BAD_REQUEST_CODE then ApiExceptions.const_get('BadRequestError').new
-        when HTTP_UNAUTHORIZED_CODE then ApiExceptions.const_get('UnauthorizedError').new
+        when HTTP_BAD_REQUEST_CODE then ApiExceptions.const_get("BadRequestError").new
+        when HTTP_UNAUTHORIZED_CODE then ApiExceptions.const_get("UnauthorizedError").new
         when HTTP_FORBIDDEN_CODE then forbidden_error(response)
-        when HTTP_NOT_FOUND_CODE then ApiExceptions.const_get('NotFoundError').new
-        when HTTP_UNPROCESSABLE_ENTITY_CODE then ApiExceptions.const_get('UnprocessableEntityError').new
+        when HTTP_NOT_FOUND_CODE then ApiExceptions.const_get("NotFoundError").new
+        when HTTP_UNPROCESSABLE_ENTITY_CODE then ApiExceptions.const_get("UnprocessableEntityError").new
         else
           ApiError.new
         end
@@ -58,9 +58,9 @@ module Http
       end
 
       def forbidden_error
-        return ApiExceptions.const_get('ApiRequestsQuotaReachedError') if api_requests_quota_reached?(@response)
+        return ApiExceptions.const_get("ApiRequestsQuotaReachedError") if api_requests_quota_reached?(@response)
 
-        ApiExceptions.const_get('ForbiddenError').new
+        ApiExceptions.const_get("ForbiddenError").new
       end
 
       def abstract_request(connection, http_method, endpoint, params, params_type)
@@ -69,7 +69,7 @@ module Http
           connection.public_send(http_method, endpoint, params)
         when :body
           connection.get endpoint do |req|
-            req.headers[:content_type] = 'application/json'
+            req.headers[:content_type] = "application/json"
             req.body = params
           end
         else

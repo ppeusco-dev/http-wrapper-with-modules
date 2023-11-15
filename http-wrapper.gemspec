@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   spec.add_dependency "faraday", "~> 2.7", ">= 2.7.11"
   spec.add_dependency "oj", "~> 3.16", ">= 3.16.1"
-  spec.add_dependency 'rspec', '~> 3.11', '>= 3.11.0'
+  spec.add_dependency "rspec", "~> 3.11", ">= 3.11.0"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
