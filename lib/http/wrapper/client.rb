@@ -7,13 +7,29 @@ module Http
       include ::Http::Wrapper::HttpStatusCodes
 
       SUCCESSFUL_STATUS = [
-        OK, CREATED
+        OK,
+        CREATED,
+        ACCEPTED,
+        NO_CONTENT,
+        MOVED_PERMANENTLY,
+        FOUND,
+        NOT_MODIFIED,
+        TEMPORARY_REDIRECT,
+        PERMANENT_REDIRECT
       ].freeze
 
       UNSUCCESSFUL_STATUS = [
-        BAD_REQUEST, UNAUTHORIZED, FORBIDDEN,
-        NOT_FOUND, UNPROCESSABLE_ENTITY, TOO_MANY_REQUESTS,
-        INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE,
+        BAD_REQUEST,
+        UNAUTHORIZED,
+        FORBIDDEN,
+        NOT_FOUND,
+        METHOD_NOT_ALLOWED,
+        CONFLICT,
+        UNPROCESSABLE_ENTITY,
+        TOO_MANY_REQUESTS,
+        INTERNAL_SERVER_ERROR,
+        BAD_GATEWAY,
+        SERVICE_UNAVAILABLE,
         GATEWAY_TIMEOUT
       ].freeze
 
