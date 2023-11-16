@@ -6,33 +6,6 @@ module Http
       include ::Http::Wrapper::ApiExceptions
       include ::Http::Wrapper::HttpStatusCodes
 
-      SUCCESSFUL_STATUS = [
-        OK,
-        CREATED,
-        ACCEPTED,
-        NO_CONTENT,
-        MOVED_PERMANENTLY,
-        FOUND,
-        NOT_MODIFIED,
-        TEMPORARY_REDIRECT,
-        PERMANENT_REDIRECT
-      ].freeze
-
-      UNSUCCESSFUL_STATUS = [
-        BAD_REQUEST,
-        UNAUTHORIZED,
-        FORBIDDEN,
-        NOT_FOUND,
-        METHOD_NOT_ALLOWED,
-        CONFLICT,
-        UNPROCESSABLE_ENTITY,
-        TOO_MANY_REQUESTS,
-        INTERNAL_SERVER_ERROR,
-        BAD_GATEWAY,
-        SERVICE_UNAVAILABLE,
-        GATEWAY_TIMEOUT
-      ].freeze
-
       ERROR_MAPPING = {
         OK => nil,
         CREATED => nil,
@@ -64,16 +37,36 @@ module Http
       end
 
       def request(connection:, http_method:, endpoint:, params_type: :query, params: {})
-        @response = abstract_request(connection, http_method, endpoint, params, params_type)
+        @response = send_request(connection, http_method, endpoint, params, params_type)
+        handle_response
+      end
 
+      private
+
+      def send_request(connection, http_method, endpoint, params, params_type)
+        request_methods = {
+          query: -> { connection.public_send(http_method, endpoint, params) },
+          body: -> { perform_body_request(connection, http_method, endpoint, params) }
+        }
+
+        request_method = request_methods[params_type] || (raise "Unknown params type: #{params_type}")
+        request_method.call
+      end
+
+      def perform_body_request(connection, _http_method, endpoint, params)
+        connection.get(endpoint) do |req|
+          req.headers[:content_type] = "application/json"
+          req.body = params
+        end
+      end
+
+      def handle_response
         parsed_response = Oj.load(@response.body)
 
         return parsed_response if response_successful?
 
         raise error_class, "Code: #{@response.status}, response: #{@response.body}"
       end
-
-      private
 
       def error_class
         ERROR_MAPPING[@response.status] || ApiError.new
@@ -89,23 +82,9 @@ module Http
 
       def forbidden_error(response)
         return ApiExceptions.const_get("ApiRequestsQuotaReachedError").new if api_requests_quota_reached?(response)
-      
-        ApiExceptions.const_get("ForbiddenError").new
-      end      
 
-      def abstract_request(connection, http_method, endpoint, params, params_type)
-        case params_type
-        when :query
-          connection.public_send(http_method, endpoint, params)
-        when :body
-          connection.get endpoint do |req|
-            req.headers[:content_type] = "application/json"
-            req.body = params
-          end
-        else
-          raise "Unknown params type: #{params_type}"
-        end
+        ApiExceptions.const_get("ForbiddenError").new
       end
-    end  
+    end
   end
 end
