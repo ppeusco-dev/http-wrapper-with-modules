@@ -33,6 +33,29 @@ module Http
         GATEWAY_TIMEOUT
       ].freeze
 
+      ERROR_MAPPING = {
+        OK => nil,
+        CREATED => nil,
+        ACCEPTED => nil,
+        NO_CONTENT => nil,
+        MOVED_PERMANENTLY => nil,
+        FOUND => nil,
+        NOT_MODIFIED => nil,
+        TEMPORARY_REDIRECT => nil,
+        PERMANENT_REDIRECT => nil,
+        BAD_REQUEST => ApiExceptions.const_get("BadRequestError").new,
+        UNAUTHORIZED => ApiExceptions.const_get("UnauthorizedError").new,
+        FORBIDDEN => ->(response) { forbidden_error(response) },
+        NOT_FOUND => ApiExceptions.const_get("NotFoundError").new,
+        UNPROCESSABLE_ENTITY => ApiExceptions.const_get("UnprocessableEntityError").new,
+        TOO_MANY_REQUESTS => ApiExceptions.const_get("ApiRequestsQuotaReachedError").new,
+        INTERNAL_SERVER_ERROR => ApiExceptions.const_get("InternalServerError").new,
+        BAD_GATEWAY => ApiExceptions.const_get("BadGatewayError").new,
+        SERVICE_UNAVAILABLE => ApiExceptions.const_get("ServiceUnavailableError").new,
+        GATEWAY_TIMEOUT => ApiExceptions.const_get("GatewayTimeoutError").new
+        # Puedes agregar más mapeos según sea necesario
+      }.freeze
+
       def connection(api_endpoint, headers)
         @connection ||= Faraday.new(api_endpoint) do |conn|
           conn.adapter Faraday.default_adapter
@@ -50,20 +73,11 @@ module Http
         raise error_class, "Code: #{@response.status}, response: #{@response.body}"
       end
 
-      # TODO: To refactor this methods is necessary map the error codes with the error classes
-      def error_class
-        case @response.status
-        when BAD_REQUEST then ApiExceptions.const_get("BadRequestError").new
-        when UNAUTHORIZED then ApiExceptions.const_get("UnauthorizedError").new
-        when FORBIDDEN then forbidden_error(response)
-        when NOT_FOUND then ApiExceptions.const_get("NotFoundError").new
-        when UNPROCESSABLE_ENTITY then ApiExceptions.const_get("UnprocessableEntityError").new
-        else
-          ApiError.new
-        end
-      end
-
       private
+
+      def error_class
+        ERROR_MAPPING[@response.status] || ApiError.new
+      end
 
       def response_successful?
         SUCCESSFUL_STATUS.include?(@response.status)
@@ -73,11 +87,11 @@ module Http
         @response.body.match?(API_REQUESTS_QUOTA_REACHED_MESSAGE)
       end
 
-      def forbidden_error
-        return ApiExceptions.const_get("ApiRequestsQuotaReachedError") if api_requests_quota_reached?(@response)
-
+      def forbidden_error(response)
+        return ApiExceptions.const_get("ApiRequestsQuotaReachedError").new if api_requests_quota_reached?(response)
+      
         ApiExceptions.const_get("ForbiddenError").new
-      end
+      end      
 
       def abstract_request(connection, http_method, endpoint, params, params_type)
         case params_type
@@ -92,6 +106,6 @@ module Http
           raise "Unknown params type: #{params_type}"
         end
       end
-    end
+    end  
   end
 end
