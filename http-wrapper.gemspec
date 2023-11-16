@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["ppeusco@gmail.com"]
 
   spec.summary = "HTTP Wrapper Gem."
-  spec.description = "A Ruby gem for wrapping HTTP requests in a convenient way.."
+  spec.description = "A Ruby gem for wrapping HTTP requests in a convenient way."
   spec.homepage = "https://github.com/ppeusco-dev/http-wrapper.git"
   spec.license = "MIT"
 

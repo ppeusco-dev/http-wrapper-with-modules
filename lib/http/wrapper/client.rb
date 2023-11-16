@@ -2,6 +2,7 @@
 
 module Http
   module Wrapper
+    # Module to encapsulate HTTP client functionality for the Http::Wrapper module.
     module Client
       include ::Http::Wrapper::ApiExceptions
       include ::Http::Wrapper::HttpStatusCodes
@@ -25,8 +26,8 @@ module Http
         INTERNAL_SERVER_ERROR => ApiExceptions.const_get("InternalServerError").new,
         BAD_GATEWAY => ApiExceptions.const_get("BadGatewayError").new,
         SERVICE_UNAVAILABLE => ApiExceptions.const_get("ServiceUnavailableError").new,
-        GATEWAY_TIMEOUT => ApiExceptions.const_get("GatewayTimeoutError").new
-        # Puedes agregar más mapeos según sea necesario
+        GATEWAY_TIMEOUT => ApiExceptions.const_get("GatewayTimeoutError").new,
+        DEFAULT => ApiExceptions.const_get("ApiError").new
       }.freeze
 
       def connection(api_endpoint, headers)
@@ -69,7 +70,7 @@ module Http
       end
 
       def error_class
-        ERROR_MAPPING[@response.status] || ApiError.new
+        ERROR_MAPPING[@response.status] || UnknownStatusError.new(@response.status)
       end
 
       def response_successful?

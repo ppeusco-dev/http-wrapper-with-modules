@@ -24,6 +24,7 @@ module Http
       BAD_GATEWAY = :bad_gateway
       SERVICE_UNAVAILABLE = :service_unavailable
       GATEWAY_TIMEOUT = :gateway_timeout
+      DEFAULT = :unknown_status
 
       SUCCESSFUL_STATUS = [
         OK,
