@@ -58,6 +58,7 @@ module Http
         connection.get(endpoint) do |req|
           req.headers[:content_type] = "application/json"
           req.body = params
+          req.adapter Faraday.default_adapter
         end
       end
 
