@@ -5,31 +5,8 @@ module Http
     # Module to encapsulate HTTP client functionality for the Http::Wrapper module.
     module Client
       include ::Http::Wrapper::ApiExceptions
-      include ::Http::Wrapper::HttpStatusCodes
       include ::Http::Wrapper::Configuration
-
-      ERROR_MAPPING = {
-        OK => nil,
-        CREATED => nil,
-        ACCEPTED => nil,
-        NO_CONTENT => nil,
-        MOVED_PERMANENTLY => nil,
-        FOUND => nil,
-        NOT_MODIFIED => nil,
-        TEMPORARY_REDIRECT => nil,
-        PERMANENT_REDIRECT => nil,
-        BAD_REQUEST => ApiExceptions.const_get("BadRequestError").new,
-        UNAUTHORIZED => ApiExceptions.const_get("UnauthorizedError").new,
-        FORBIDDEN => ->(response) { forbidden_error(response) },
-        NOT_FOUND => ApiExceptions.const_get("NotFoundError").new,
-        UNPROCESSABLE_ENTITY => ApiExceptions.const_get("UnprocessableEntityError").new,
-        TOO_MANY_REQUESTS => ApiExceptions.const_get("ApiRequestsQuotaReachedError").new,
-        INTERNAL_SERVER_ERROR => ApiExceptions.const_get("InternalServerError").new,
-        BAD_GATEWAY => ApiExceptions.const_get("BadGatewayError").new,
-        SERVICE_UNAVAILABLE => ApiExceptions.const_get("ServiceUnavailableError").new,
-        GATEWAY_TIMEOUT => ApiExceptions.const_get("GatewayTimeoutError").new,
-        DEFAULT => ApiExceptions.const_get("ApiError").new
-      }.freeze
+      include ::Http::Wrapper::ErrorMapping
 
       def request(connection:, http_method:, endpoint:, params_type: :query, params: {})
         @response = send_request(connection, http_method, endpoint, params, params_type)
