@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["ppeusco@gmail.com"]
 
   spec.summary = "HTTP Wrapper Gem."
-  spec.description = "A Ruby gem for wrapping HTTP requests in a convenient way.."
+  spec.description = "A Ruby gem for wrapping HTTP requests in a convenient way."
   spec.homepage = "https://github.com/ppeusco-dev/http-wrapper.git"
   spec.license = "MIT"
 
@@ -37,6 +37,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency "faraday", "~> 2.7", ">= 2.7.11"
   spec.add_dependency "oj", "~> 3.16", ">= 3.16.1"
   spec.add_dependency "rspec", "~> 3.11", ">= 3.11.0"
+
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'byebug', '~> 11.1', '>= 11.1.3'
+  spec.add_development_dependency 'rake', '~> 13.1'
+  spec.add_development_dependency 'rspec-rails', '~> 6.0', '>= 6.0.3'
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
