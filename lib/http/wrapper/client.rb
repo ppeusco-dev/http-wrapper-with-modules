@@ -6,6 +6,7 @@ module Http
     module Client
       include ::Http::Wrapper::ApiExceptions
       include ::Http::Wrapper::HttpStatusCodes
+      include ::Http::Wrapper::Configuration
 
       ERROR_MAPPING = {
         OK => nil,
@@ -29,13 +30,6 @@ module Http
         GATEWAY_TIMEOUT => ApiExceptions.const_get("GatewayTimeoutError").new,
         DEFAULT => ApiExceptions.const_get("ApiError").new
       }.freeze
-
-      def connection(api_endpoint, headers, faraday_options = {})
-        @connection ||= faraday_connection(faraday_options) do |conn|
-          conn.url_prefix = api_endpoint
-          conn.headers = headers 
-        end
-      end
 
       def request(connection:, http_method:, endpoint:, params_type: :query, params: {})
         @response = send_request(connection, http_method, endpoint, params, params_type)
@@ -86,12 +80,6 @@ module Http
         return ApiExceptions.const_get("ApiRequestsQuotaReachedError").new if api_requests_quota_reached?(response)
 
         ApiExceptions.const_get("ForbiddenError").new
-      end
-
-      def faraday_connection(options = {})
-        Faraday.new(options) do |conn|
-          conn.adapter Faraday.default_adapter
-        end
       end
     end
   end
