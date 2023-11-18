@@ -2,8 +2,11 @@
 
 module Http
   module Wrapper
+    # Module to encapsulate custom exceptions for the Http::Wrapper module.
     module ApiExceptions
       class ApiExceptionError < StandardError; end
+
+      ApiError = Class.new(ApiExceptionError)
 
       [
         [:BadRequestError, "Bad Request"],
@@ -17,12 +20,16 @@ module Http
         [:ServiceUnavailableError, "Service Unavailable"],
         [:GatewayTimeoutError, "Gateway Timeout"]
       ].each do |exception, message|
-        const_set(exception, Class.new(ApiExceptionError) do
+        const_set(exception, Class.new(ApiError) do
           define_method(:initialize) { super(message) }
         end)
       end
 
-      ApiError = Class.new(ApiExceptionError)
+      UnknownStatusError = Class.new(ApiError) do
+        def initialize(status)
+          super("Unknown Status: #{status}")
+        end
+      end
     end
   end
 end
