@@ -30,10 +30,10 @@ module Http
         DEFAULT => ApiExceptions.const_get("ApiError").new
       }.freeze
 
-      def connection(api_endpoint, headers)
-        @connection ||= Faraday.new(api_endpoint) do |conn|
-          conn.adapter Faraday.default_adapter
-          conn.headers = headers
+      def connection(api_endpoint, headers, faraday_options = {})
+        @connection ||= faraday_connection(faraday_options) do |conn|
+          conn.url_prefix = api_endpoint
+          conn.headers = headers 
         end
       end
 
@@ -86,6 +86,12 @@ module Http
         return ApiExceptions.const_get("ApiRequestsQuotaReachedError").new if api_requests_quota_reached?(response)
 
         ApiExceptions.const_get("ForbiddenError").new
+      end
+
+      def faraday_connection(options = {})
+        Faraday.new(options) do |conn|
+          conn.adapter Faraday.default_adapter
+        end
       end
     end
   end
