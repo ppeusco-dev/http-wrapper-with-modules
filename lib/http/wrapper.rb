@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "wrapper/version"
+require "faraday"
+
+require "http/wrapper/version"
+require "http/wrapper/http_status_codes"
+require "http/wrapper/api_exceptions"
+require "http/wrapper/client"
 
 module Http
   module Wrapper
