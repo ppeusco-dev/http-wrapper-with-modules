@@ -6,7 +6,7 @@ module Http
     module Client
       include ::Http::Wrapper::ApiExceptions
       include ::Http::Wrapper::Configuration
-      include ::Http::Wrapper::ErrorMapping
+      include ::Http::Wrapper::ErrorHandling
       include ::Http::Wrapper::RequestHandler
       include ::Http::Wrapper::ResponseHandler
 

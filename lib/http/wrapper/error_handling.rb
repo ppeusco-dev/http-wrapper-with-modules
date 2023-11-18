@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 module Http
   module Wrapper
-    module ErrorMapping
-
+    module ErrorHandling
       include ::Http::Wrapper::HttpStatusCodes
-      
+      include ::Http::Wrapper::ApiExceptions
+
+      private
+
       ERROR_MAPPING = {
         OK => nil,
         CREATED => nil,
@@ -26,7 +30,20 @@ module Http
         GATEWAY_TIMEOUT => ApiExceptions.const_get("GatewayTimeoutError").new,
         DEFAULT => ApiExceptions.const_get("ApiError").new
       }.freeze
+
+      def error_class
+        ERROR_MAPPING[@response.status] || UnknownStatusError.new(@response.status)
+      end
+
+      def api_requests_quota_reached?
+        @response.body.match?(API_REQUESTS_QUOTA_REACHED_MESSAGE)
+      end
+
+      def forbidden_error(response)
+        return ApiExceptions.const_get("ApiRequestsQuotaReachedError").new if api_requests_quota_reached?(response)
+
+        ApiExceptions.const_get("ForbiddenError").new
+      end
     end
   end
 end
-

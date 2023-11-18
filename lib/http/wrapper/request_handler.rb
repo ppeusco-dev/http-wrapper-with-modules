@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Http
   module Wrapper
     module RequestHandler

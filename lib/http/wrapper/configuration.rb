@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Http
   module Wrapper
     module Configuration
       def connection(api_endpoint, headers, faraday_options = {})
         @connection ||= faraday_connection(faraday_options) do |conn|
           conn.url_prefix = api_endpoint
-          conn.headers = headers 
+          conn.headers = headers
         end
       end
 
