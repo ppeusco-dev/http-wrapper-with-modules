@@ -2,6 +2,7 @@
 
 module Http
   module Wrapper
+    # ErrorHandling module provides methods for handling errors in the HTTP wrapper.
     module ErrorHandling
       include ::Http::Wrapper::HttpStatusCodes
       include ::Http::Wrapper::ApiExceptions

@@ -11,3 +11,8 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'  # Excluye todos los archivos de prueba
+  Max: 30  # Cambia este valor según tus preferencias

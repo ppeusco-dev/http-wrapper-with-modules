@@ -2,6 +2,7 @@
 
 module Http
   module Wrapper
+    # ResponseHandler module provides methods for handling HTTP responses in the HTTP wrapper.
     module ResponseHandler
       private
 
